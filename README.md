@@ -9,32 +9,19 @@ LiteLog은 **건강한 삶을 위한 운동 및 식단 기록 웹 애플리케�
 ## 🚀 주요 기능
 
 ✅ **회원 관리** (회원가입, 로그인, JWT 인증)  
-✅ **운동 기록** (운동 종류, 시간 저장)  
 ✅ **식단 기록** (식사별 칼로리, 사진 등 기록)  
-✅ **체중 변화 차트 제공** (일별, 주별 분석)  
 ✅ **건강 습관 기록** (소소한 일상 다이어리 기능)  
 
 ## 🛠️ 기술 스택
 
 - Java 17
-- Spring Boot 3.x (Spring MVC, JPA, Security)
+- Spring Boot 3.3.9 (Spring MVC, JPA, Security)
 - Spring Data JPA + MySQL
-- Lombok, Swagger
 - JWT 기반 인증 & 보안
 
 ### **DevOps & 배포**
 - Docker & Docker Compose
 - AWS (EC2, S3, RDS)
-
-## 📂 프로젝트 구조
-```
-
-```
-
-## 📌 API 설계
-
-
----
 
 **LiteLog – 더 가볍고 건강한 삶을 기록하세요!** ✨
 
