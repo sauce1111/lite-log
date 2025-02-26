@@ -1,7 +1,5 @@
 # LiteLog 📝✨
 
-**A mindful journal for tracking daily fitness and well-being.**
-
 ## 📌 프로젝트 개요
 LiteLog은 **건강한 삶을 위한 운동 및 식단 기록 웹 애플리케이션**입니다.
 사용자는 매일의 운동, 식단, 체중 변화를 기록하며 더 나은 습관을 만들어갈 수 있습니다.
