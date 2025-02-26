@@ -1,6 +1,5 @@
 package com.litelog.lite_log.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.litelog.lite_log.config.TestSecurityConfig;
 import com.litelog.lite_log.dto.LoginRequestDto;
 import com.litelog.lite_log.dto.SignupRequestDto;
@@ -9,31 +8,19 @@ import com.litelog.lite_log.service.AuthService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AuthController.class)
 @AutoConfigureMockMvc
 @Import(TestSecurityConfig.class)
-class AuthControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+class AuthControllerTest extends BaseControllerTest {
 
     @MockBean
     private AuthService authService;
@@ -50,13 +37,7 @@ class AuthControllerTest {
         SignupRequestDto requestDto = new SignupRequestDto(requestUsername, requestPassword, requestEmail, requestNickname);
 
         // when, then
-        mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDto)))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
-                .andExpect(jsonPath("$.message").value("Signup success."));
+        performPostRequest("/auth/signup", requestDto, HttpStatus.OK, "Signup success.");
     }
 
     @Test
@@ -71,15 +52,7 @@ class AuthControllerTest {
         SignupRequestDto requestDto = new SignupRequestDto(requestBlankUsername, requestPassword, requestEmail, requestNickname);
 
         // when, then
-        mockMvc.perform(post(url)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestDto)))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.error").value("Bad Request"))
-                .andExpect(jsonPath("$.errors").exists())
-                .andExpect(jsonPath("$.errors.username").isNotEmpty())
+        performPostRequest("/auth/signup", requestDto, HttpStatus.BAD_REQUEST, null)
                 .andExpect(jsonPath("$.errors.username").value("username is required."));
     }
 
@@ -96,13 +69,7 @@ class AuthControllerTest {
         Mockito.when(authService.login(any(LoginRequestDto.class))).thenReturn(mockToken);
 
         // when, then
-        mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDto)))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
-                .andExpect(jsonPath("$.message").value("Login success."))
+        performPostRequest("/auth/login", requestDto, HttpStatus.OK, "Login success.")
                 .andExpect(jsonPath("$.data.token").value(mockToken));
     }
 
@@ -118,12 +85,6 @@ class AuthControllerTest {
                 .thenThrow(new UserNotFoundException());
 
         // when, then
-        mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDto)))
-                .andDo(print())
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
-                .andExpect(jsonPath("$.message").value("User not found."));
+        performPostRequest("/auth/login", requestDto, HttpStatus.NOT_FOUND, "User not found.");
     }
 }

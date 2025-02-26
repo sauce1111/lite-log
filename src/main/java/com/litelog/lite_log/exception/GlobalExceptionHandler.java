@@ -13,6 +13,11 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleGlobalException(Exception exception) {
+        return buildErrorResponse("Internal Server Error: " + exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler
     public ResponseEntity<Map<String, Object>> handlerCustomException(CustomException exception) {
         return buildErrorResponse(exception.getMessage(), exception.getHttpStatus());

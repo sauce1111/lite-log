@@ -13,7 +13,7 @@ public class TestSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**", "/diary/**").permitAll()
                         .anyRequest().authenticated());
 
         return http.build();
