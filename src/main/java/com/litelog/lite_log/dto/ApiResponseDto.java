@@ -2,6 +2,7 @@ package com.litelog.lite_log.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
@@ -10,18 +11,18 @@ import java.time.LocalDateTime;
 public class ApiResponseDto<T> {
 
     private final LocalDateTime localDateTime;
-    private final int status;
+    private final HttpStatus status;
     private final String message;
     private final T data;
 
-    public ApiResponseDto(int status, String message, T data) {
+    public ApiResponseDto(HttpStatus status, String message, T data) {
         this.localDateTime = LocalDateTime.now();
         this.status = status;
         this.message = message;
         this.data = data;
     }
 
-    public ApiResponseDto(int status, String message) {
+    public ApiResponseDto(HttpStatus status, String message) {
         this(status, message, null);
     }
 }

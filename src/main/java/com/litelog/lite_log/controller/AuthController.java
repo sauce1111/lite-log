@@ -3,7 +3,6 @@ package com.litelog.lite_log.controller;
 import com.litelog.lite_log.dto.ApiResponseDto;
 import com.litelog.lite_log.dto.LoginRequestDto;
 import com.litelog.lite_log.dto.SignupRequestDto;
-import com.litelog.lite_log.dto.TokenResponseDto;
 import com.litelog.lite_log.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +24,14 @@ public class AuthController {
     @PostMapping(value = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponseDto<Void>> signup(@Valid @RequestBody SignupRequestDto requestDto) {
         authService.signup(requestDto);
-        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK.value(), "Signup success."));
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "Signup success."));
     }
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponseDto<TokenResponseDto>> login(@RequestBody LoginRequestDto requestDto) {
+    public ResponseEntity<ApiResponseDto> login(@Valid @RequestBody LoginRequestDto requestDto) {
         String token = authService.login(requestDto);
-        return ResponseEntity.ok(
-                new ApiResponseDto<>(HttpStatus.OK.value(), "Login success.", new TokenResponseDto(token)));
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + token)
+                .body(new ApiResponseDto<>(HttpStatus.OK, "Login success."));
     }
 }
