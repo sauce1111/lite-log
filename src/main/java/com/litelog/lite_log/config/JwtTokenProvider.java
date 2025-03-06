@@ -4,6 +4,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -21,6 +22,10 @@ public class JwtTokenProvider {
     public JwtTokenProvider(JwtProperties jwtProperties) {
         byte[] keyBytes = Base64.getDecoder().decode(jwtProperties.getSecretKey());
         this.key = Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String createToken(UserDetails userDetails) {
+        return createToken(userDetails.getUsername());
     }
 
     public String createToken(String username) {
