@@ -38,8 +38,6 @@ public class DiaryService {
     }
 
     private String getImageUrl(MultipartFile menuImage) throws IOException {
-        String imageUrl = null;
-
         if (menuImage == null && menuImage.isEmpty()) {
             return null;
         }
