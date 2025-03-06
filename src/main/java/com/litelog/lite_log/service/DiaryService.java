@@ -1,6 +1,5 @@
 package com.litelog.lite_log.service;
 
-import com.litelog.lite_log.dto.DiaryDto;
 import com.litelog.lite_log.entity.Diary;
 import com.litelog.lite_log.entity.Member;
 import com.litelog.lite_log.exception.DiaryNotFoundException;
@@ -18,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -41,21 +39,28 @@ public class DiaryService {
 
     private String getImageUrl(MultipartFile menuImage) throws IOException {
         String imageUrl = null;
-        if (menuImage != null && !menuImage.isEmpty()) {
-            validateFile(menuImage);
 
-            File uploadDir = new File(IMAGE_UPLOAD_DIR);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
-
-            String imageName = UUID.randomUUID() + "_" + StringUtils.cleanPath(menuImage.getOriginalFilename());
-            File serverFile = new File(uploadDir, imageName);
-            Files.copy(menuImage.getInputStream(), serverFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-            imageUrl = "/images/" + imageName;
+        if (menuImage == null && menuImage.isEmpty()) {
+            return null;
         }
-        return imageUrl;
+
+        validateFile(menuImage);
+
+        File uploadDir = new File(IMAGE_UPLOAD_DIR);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+
+        String imageName = UUID.randomUUID() + "_" + StringUtils.cleanPath(menuImage.getOriginalFilename());
+        File serverFile = new File(uploadDir, imageName);
+
+        try {
+            Files.copy(menuImage.getInputStream(), serverFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            return "/images/" + imageName;
+        } catch (IOException e) {
+            Files.deleteIfExists(serverFile.toPath());
+            throw new FileUploadException("File upload failed.");
+        }
     }
 
     private void validateFile(MultipartFile file) {
