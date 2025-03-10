@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
 <head>
-    <title>index</title>
+    <title>Home</title>
 </head>
 <body>
-<div th:replace="~{fragments/layout :: content}">
+<div layout:fragment="content">
     <div class="text-center mt-5">
         <h1>Hello!! Lite-Log</h1>
         <p>가볍게 기록하는 나만의 일기장</p>
-        <a href="/signup" class="btn btn-primary">회원가입</a>
-        <a href="/login" class="btn btn-secondary">로그인</a>
+        <a href="/auth/signup" class="btn btn-primary">회원가입</a>
+        <a href="/auth/login" class="btn btn-secondary">로그인</a>
     </div>
 </div>
 </body>
