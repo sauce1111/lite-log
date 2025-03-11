@@ -85,11 +85,17 @@ function handleLogin() {
         password: password,
     };
 
-    sendRequest("/auth/login", "POST", requestData, function (response) {
-        if (response.status === "OK") {
-            alert("로그인 성공!");
-            localStorage.setItem("token", response.token);
-            window.location.href = "/";
+    sendRequest("/auth/login", "POST", requestData, function (response, xhr) {
+//        if (response.status === "OK") {
+        if (xhr.status === 200) {
+            const token = xhr.getResponseHeader("Authoorization");
+            if (token) {
+                localStorage.setItem("jwt", token);
+                alert("로그인 성공!");
+                window.location.href = "/diary/calendar";
+            } else {
+                alert("로그인 실패: 응답 내 토큰이 없습니다.");
+            }
         } else {
             alert("로그인 실패: " + response.message);
         }

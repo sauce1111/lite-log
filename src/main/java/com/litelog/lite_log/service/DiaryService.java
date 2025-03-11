@@ -1,5 +1,6 @@
 package com.litelog.lite_log.service;
 
+import com.litelog.lite_log.dto.DiaryDto;
 import com.litelog.lite_log.entity.Diary;
 import com.litelog.lite_log.entity.Member;
 import com.litelog.lite_log.exception.DiaryNotFoundException;
@@ -18,6 +19,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -75,5 +77,12 @@ public class DiaryService {
     public Diary getDiary(Member member, LocalDate date) {
         return diaryRepository.findByMemberAndDate(member, date)
                 .orElseThrow(() -> new DiaryNotFoundException("Diary not found for date: " + date));
+    }
+
+    public List<DiaryDto> getDiaryDtoListByMember(Member member) {
+        List<Diary> diaries = diaryRepository.findByMember(member);
+        return diaries.stream()
+                .map(DiaryDto::new)
+                .collect(Collectors.toList());
     }
 }

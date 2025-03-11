@@ -12,9 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/diary")
@@ -23,6 +25,14 @@ public class DiaryController {
 
     private final DiaryService diaryService;
     private final MemberService memberservice;
+
+    @GetMapping("/create")
+    public ModelAndView create(@RequestParam(value = "date", required = false) String date) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("diary-create");
+        modelAndView.addObject("date", date);
+        return modelAndView;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponseDto<Void>> createDiary(
@@ -43,5 +53,14 @@ public class DiaryController {
         DiaryDto diaryDto = new DiaryDto(diary);
 
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "Diary found.", diaryDto));
+    }
+
+    @GetMapping("/calendar")
+    public ResponseEntity<ApiResponseDto<List<DiaryDto>>> getUserDiaries() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberservice.findByUsername(username);
+        List<DiaryDto> diaryDtoList = diaryService.getDiaryDtoListByMember(member);
+
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "Diaries retrieved successfully.", diaryDtoList));
     }
 }
