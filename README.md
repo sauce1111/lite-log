@@ -17,9 +17,5 @@ LiteLog은 **건강한 삶을 위한 운동 및 식단 기록 웹 애플리케�
 - Spring Data JPA + MySQL
 - JWT 기반 인증 & 보안
 
-### **DevOps & 배포**
-- Docker & Docker Compose
-- AWS (EC2, S3, RDS)
-
 **LiteLog – 더 가볍고 건강한 삶을 기록하세요!** ✨
 
